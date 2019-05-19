@@ -8,9 +8,19 @@ const sequelize = new Sequelize(dbName, user, password, {
   logging: true,
   timezone: '+08:00',
   define: {
-
+    timetamps: true,
+    paranoid: true,
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    deletedAt: 'deletedAt',
+    underscored: true,
+    freezeTableName:true
   }
 })
+
+sequelize.sync({
+  force: false
+})
 module.exports = {
-  db: sequelize
+  sequelize
 }
