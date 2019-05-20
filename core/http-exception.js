@@ -41,4 +41,13 @@ class AuthFailed extends HttpException {
     this.errorCode = errorCode
   }
 }
-module.exports = { HttpException, ParameterException, Success, NotFound, AuthFailed }
+
+class Forbbiden extends HttpException {
+  constructor (msg = '密码错误', errorCode = 10000) {
+    super()
+    this.msg = msg
+    this.errorCode = errorCode
+    this.status = 403
+  }
+}
+module.exports = { HttpException, ParameterException, Success, NotFound, AuthFailed, Forbbiden }

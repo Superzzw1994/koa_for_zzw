@@ -5,6 +5,7 @@ const router = new Router({
 const { IntegerValidator } = require('../../validator/validator.js')
 const { Auth } = require('../../../middleware/auth')
 router.get('/latest', new Auth().m, async (ctx, next) => {
+  ctx.body = ctx.auth.uid
 })
 
 module.exports = router
