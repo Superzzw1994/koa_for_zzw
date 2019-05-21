@@ -6,6 +6,8 @@ const { User } = require('../../models/user.js')
 const { LoginType } = require('../../lib/enum.js')
 const { TokenValidator } = require('../../validator/validator.js')
 const { generateToken } = require('../../../core/util')
+const { Auth } = require('../../../middleware/auth')
+const { WechatManager } = require('../../services/wechat')
 router.post('/', async (ctx, next) => {
   const v = await new TokenValidator().validate(ctx)
   let token
@@ -14,6 +16,7 @@ router.post('/', async (ctx, next) => {
     token = await emailLogin(v.get('body.account'), v.get('body.secret'))
     break
     case LoginType.LOGIN_MINI_PROGRAM:
+    token = await WechatManager.codeToToken(v.get('body.account'))
     break
     default:
     break
@@ -24,6 +27,6 @@ router.post('/', async (ctx, next) => {
 })
 async function emailLogin(accout, secret) {
   const user = await User.verifyEmailPassword(accout, secret)
-  return generateToken(user.id, 2)
+  return generateToken(user.id, Auth.USER)
 }
 module.exports = router
