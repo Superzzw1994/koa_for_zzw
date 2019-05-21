@@ -4,7 +4,7 @@ const router = new Router({
 })
 const { User } = require('../../models/user.js')
 const { LoginType } = require('../../lib/enum.js')
-const { TokenValidator } = require('../../validator/validator.js')
+const { TokenValidator, NoEmptyValidator } = require('../../validator/validator.js')
 const { generateToken } = require('../../../core/util')
 const { Auth } = require('../../../middleware/auth')
 const { WechatManager } = require('../../services/wechat')
@@ -21,8 +21,17 @@ router.post('/', async (ctx, next) => {
     default:
     break
   }
+  console.log(token)
   ctx.body = {
     token
+  }
+})
+
+router.post('/verify', async (ctx, next) => {
+  const v = await new NoEmptyValidator().validate(ctx)
+  const result = await Auth.verifyToken(v.get('body.token'))
+  ctx.body = {
+    result
   }
 })
 async function emailLogin(accout, secret) {

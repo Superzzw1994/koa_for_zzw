@@ -80,4 +80,15 @@ class TokenValidator extends LinValidator {
     }
   }
 }
-module.exports = { IntegerValidator, RegisterValidator, TokenValidator }
+
+class NoEmptyValidator extends LinValidator {
+  constructor() {
+    super()
+    this.token = [
+      new Rule('isLength', '不允许为空', {
+        min: 1
+      })
+    ]
+  }
+}
+module.exports = { IntegerValidator, RegisterValidator, TokenValidator, NoEmptyValidator }

@@ -6,15 +6,15 @@ const { Auth } = require('../../middleware/auth')
 class WechatManager {
   static async codeToToken(code) {
     const url = util.format(global.config.wechat.loginUrl, global.config.wechat.appId, global.config.wechat.appSecret, code)
-    console.log(url)
     const result= await axios.get(url)
     if (result.status !== 200) {
       throw new global.errors.AuthFailed('openid获取失败')
     }
-    if (result.data.errcode === 0) {
-      throw new global.errors.AuthFailed('openid获取失败' + result.data.errcode)
+    const errcode = result.data.errcode
+    const errmsg = result.data.errmsg
+    if (errcode) {
+      throw new global.errors.AuthFailed('openid获取失败' + errmsg)
     }
-    console.log(User)
     let user = await User.getUserByOpenId(result.data.openid)
     if (!user) {
       user = await User.registerByOpenId(result.data.openid)
